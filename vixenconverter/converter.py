@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from docopt import docopt
+
 from vixenfiles import VixenSequence,VixenProfile
 
 help_message = """Proton - Vixen Converter
@@ -17,8 +18,9 @@ Options:
 
 def convert(seq_file, pro_file):
     seq = VixenSequence.make_vixen_sequence(seq_file)
-
+    pro = VixenProfile.make_vixen_profile(pro_file)
     print(seq)
+    print(pro)
 
 def run():
     arguments = docopt(help_message, version='Vixen Converter 0.0.1')
