@@ -1,10 +1,9 @@
-import sys
 import os
-from VixenFiles.VixenFile import VixenFile
+from vixenfiles import VixenFile, VixenException
 
 class VixenProfile(VixenFile, object):
-    def __init__(self,filename):
-        super().__init__(filename)
+    def __init__(self,pro_path):
+        super().__init__(pro_path)
         if self.getType() != 'Profile':
             raise VixenException("File is not a Vixen profile")
 
@@ -17,11 +16,11 @@ class VixenProfile(VixenFile, object):
     # Checks if file path/extension is valid
     # and builds sequence path from vix_path and file
     @staticmethod
-    def make_vixen_profile(file, vix_path):
-        if os.path.splitext(file)[-1] != ".pro":
-            raise ValueError("Not a .pro file")
-
-        if vix_path is None:
+    def make_vixen_profile(pro_path):
+        if pro_path is None:
             raise VixenException("No path specified")
 
-        return VixenProfile(vix_path + "/Profiles/" + file)
+        if os.path.splitext(pro_path)[-1] != ".pro":
+            raise ValueError("Not a .pro file")
+
+        return VixenProfile(pro_path)

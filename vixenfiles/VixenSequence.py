@@ -3,18 +3,13 @@ import sys
 import os
 import base64
 import numpy
-from VixenFiles.VixenFile import VixenFile
-from VixenFiles.VixenProfile import VixenProfile
-from Patching.Patcher import Patcher
+from vixenfiles import VixenFile, VixenProfile, VixenException
 
 class VixenSequence(VixenFile, object):
-    def __init__(self, filename, vixPath, patcher):
-        super().__init__(filename)
+    def __init__(self, seq_path):
+        super().__init__(seq_path)
 
-        self.patcher = patcher
-        self.vixPath = vixPath
-
-        if self.getType() != 'Program':
+        if self.get_type() != 'Program':
             raise VixenException("File is not a Vixen sequence")
         self.metadata={}
         self.metadata['engine'] = self.root.find('EngineType').text
@@ -24,10 +19,14 @@ class VixenSequence(VixenFile, object):
 
         sys.stderr.write('VIXEN_WARN: At this time, we can only extract sequence metadata and event values.  Plugins are not yet supported.\n')
         
-        audioel = self.root.find('Audio')
+        audio_element = self.root.find('Audio')
 
-        self.metadata['title'] = audioel.text
-        self.audio = {'title':audioel.text, 'filename':audioel.attrib['filename'], 'duration':int(audioel.attrib['duration'])}
+        self.metadata['title'] = audio_element.text
+        self.audio = {
+            'title': audio_element.text,
+            'filename': audio_element.attrib['filename'],
+            'duration': int(audio_element.attrib['duration'])
+        }
 
         self.metadata['time'] = int(self.root.find('Time').text)
         self.metadata['eventperiod'] = int(self.root.find('EventPeriodInMilliseconds').text)
@@ -36,40 +35,20 @@ class VixenSequence(VixenFile, object):
         self.metadata['profile'] = self.root.find('Profile').text
         self.events = self.extract_events(self.root.find('EventValues').text)
 
-    def extract_events(self, eventvalues):
-        estring = base64.b64decode(eventvalues)
-        numev = int(numpy.ceil(self.metadata['time']/self.metadata['eventperiod']))
-        numch = int(len(estring)/numev)
+    def extract_events(self, event_values):
+        estring = base64.b64decode(event_values)
+        numev = int(numpy.ceil(self.metadata['time'] / self.metadata['eventperiod']))
+        numch = int(len(estring) / numev)
         events = numpy.zeros((numch + 1, numev), dtype=numpy.uint8)
 
         for ch in range(numch):
             for ev in range(numev):
-                events[ch][ev] = estring[ev+numev*ch];
+                events[ch][ev] = estring[ev + numev * ch];
 
-        # Fix vixen file order
-        vixenProfile = VixenProfile.make_vixen_profile( \
-                self.metadata['profile'] + '.pro', self.vixPath)
-        def makeIndex(l):
-            k = enumerate(l)
-            index = list(map(lambda x: x[0], sorted(k, key=lambda x: x[1])))
-            return numpy.array(index)
-        reorderedEvents = events[makeIndex(vixenProfile.getOutputOrder())]
-
-        # Patch the channels
-        patchIndex = self.patcher.makePatchIndex()
-        reorderedEvents = numpy.vstack([reorderedEvents, ([0] * numev)])
-        patchedEvents = reorderedEvents[numpy.array(patchIndex)]
-
-        # Zero out unused channels
-        zeroChannel = numpy.zeros((1, numev), dtype=numpy.uint8)
-        for ind, val in enumerate(patchIndex):
-            if val == -1:
-                patchedEvents[ind] = zeroChannel
-
-        finalEvents = numpy.transpose(patchedEvents)
         self.metadata['numch'] = numch
         self.metadata['numev'] = numev
-        return finalEvents
+
+        return events
 
     def dump(self):
         return {"metadata":self.metadata,"audio":self.audio,"events":self.events}
@@ -90,12 +69,12 @@ class VixenSequence(VixenFile, object):
     # Factory method to create a VixenSequence
     # Checks if file path/extension is valid
     # and builds sequence path from vix_path and file
-    def make_vixen_sequence(file, vix_path, patcher):
-        if os.path.splitext(file)[-1] != ".vix":
-            raise ValueError("Not a .vix file")
-
-        if vix_path is None:
+    def make_vixen_sequence(seq_path):
+        if seq_path is None:
             raise VixenException("No path specified")
 
-        return VixenSequence(vix_path + "/Sequences/" + file, vix_path, patcher)
+        if os.path.splitext(seq_path)[-1] != ".vix":
+            raise ValueError("Not a .vix file")
+
+        return VixenSequence(seq_path)
 
