@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from docopt import docopt
-
+import json
 from vixenfiles import VixenSequence,VixenProfile
 
 help_message = """Proton - Vixen Converter
@@ -16,11 +16,18 @@ Options:
     -h --help   Show this message
 """
 
+
 def convert(seq_file, pro_file):
+    # Get sequence
     seq = VixenSequence.make_vixen_sequence(seq_file)
-    pro = VixenProfile.make_vixen_profile(pro_file)
-    print(seq)
-    print(pro)
+    seq_metadata = seq.get_metadata()
+    # Write data as JSON to file
+    seq_json = json.dumps(seq.events.tolist())
+    ofile_name = seq_metadata['title'] + ".json"
+    ofile = open(ofile_name, mode='w')
+    ofile.write(seq_json)
+    # Get set up for proton-cli call
+    
 
 def run():
     arguments = docopt(help_message, version='Vixen Converter 0.0.1')

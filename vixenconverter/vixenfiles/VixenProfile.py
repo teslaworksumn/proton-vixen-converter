@@ -6,10 +6,10 @@ from vixenfiles import VixenFile, VixenException
 class VixenProfile(VixenFile, object):
     def __init__(self, pro_path):
         super().__init__(pro_path)
-        if self.getType() != 'Profile':
+        if self.get_type() != 'Profile':
             raise VixenException("File is not a Vixen profile")
 
-    def getOutputOrder(self):
+    def get_output_order(self):
         order = self.root.find("Outputs").text
         return list(map(lambda x: int(x), order.split(',')))
 

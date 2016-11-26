@@ -23,7 +23,7 @@ class VixenSequence(VixenFile, object):
         
         audio_element = self.root.find('Audio')
 
-        self.metadata['title'] = audio_element.text
+        self.metadata['title'] = "".join(seq_path.split('/')[::-1]).split('.')[0]
         self.audio = {
             'title': audio_element.text,
             'filename': audio_element.attrib['filename'],
