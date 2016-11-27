@@ -6,6 +6,7 @@
 import xml.etree.ElementTree as ET
 import sys
 
+
 class VixenFile(object):
     def __init__(self, file_path):
         # Set convert=false at runtime to prevent automatic file detection.

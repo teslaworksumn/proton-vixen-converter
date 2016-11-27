@@ -7,7 +7,7 @@ import numpy
 from vixenfiles import VixenFile, VixenException
 
 
-class VixenSequence(VixenFile, object):
+class VixenSequence(VixenFile,):
     def __init__(self, seq_path):
         super().__init__(seq_path)
 
@@ -41,7 +41,7 @@ class VixenSequence(VixenFile, object):
         estring = base64.b64decode(event_values)
         numev = int(numpy.ceil(self.metadata['time'] / self.metadata['eventperiod']))
         numch = int(len(estring) / numev)
-        events = numpy.zeros((numch + 1, numev), dtype=numpy.uint8)
+        events = numpy.zeros((numch, numev), dtype=numpy.uint8)
 
         for ch in range(numch):
             for ev in range(numev):
