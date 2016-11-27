@@ -7,7 +7,7 @@ import numpy
 from vixenfiles import VixenFile, VixenException
 
 
-class VixenSequence(VixenFile,):
+class VixenSequence(VixenFile):
     def __init__(self, seq_path):
         super().__init__(seq_path)
 
