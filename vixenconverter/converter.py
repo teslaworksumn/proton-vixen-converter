@@ -28,6 +28,7 @@ def add_seq_to_proton_cli(proton_path, seq, seq_file, key_file, audio_file, layo
         key_file,
         seq_md['title'],
         audio_file,
+        str(seq_md['time']),
         str(seq_md['eventperiod']),
         seq_file,
         layout_id)
