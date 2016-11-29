@@ -20,6 +20,7 @@ class VixenProfile(VixenFile):
         pretty_channels = list(map(lambda channel: {
             'channelName': channel.text.replace('(', ' ').replace(')', ' ').replace('.', ' ').replace('\'', ' '),
             'color': format(int(channel.attrib['color']) & 0xffffff, "06X"),
+            'internalChannel': output_order.index(int(channel.attrib['output'])) + 1,
             'dmxChannel': output_order.index(int(channel.attrib['output'])) + 1,
             'fixtureName': 'VixFix' + self.name,
             'location': '0,0,0',
