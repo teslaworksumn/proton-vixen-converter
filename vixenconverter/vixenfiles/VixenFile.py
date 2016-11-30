@@ -1,7 +1,11 @@
-# VixenFile.py
-# Library designed to read Vixen Lights sequences, profiles, and show files
-# Written by Ryan Smith <smit7595@umn.edu>
-# This library is available under the MIT license found in the LICENSE file
+"""VixenFile
+Library designed to read Vixen Lights sequences and profiles.
+Written by Ryan Smith <smit7595@umn.edu>, modified by Ryan Fredlund <fredl027@umn.edu>.
+This library is available under the MIT license found in the LICENSE file.
+
+VixenFile takes a Vixen sequence or profile and creates an XML tree for it, warning the user 
+if it detects the file is not a sequence or profile.
+"""
 
 import xml.etree.ElementTree as ET
 import sys
