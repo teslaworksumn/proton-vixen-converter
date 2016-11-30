@@ -43,6 +43,7 @@ def import_profile(proton_path, pro_file):
     # Get profile
     pro = VixenProfile.make_vixen_profile(pro_file)
     channels = pro.get_channels()
+
     # Write layout data as JSON to file
     layout = {
         'layoutName': pro.name,
@@ -52,21 +53,30 @@ def import_profile(proton_path, pro_file):
     layout_file_name = pro.name + "_layout.json"
     ofile = open(layout_file_name, mode='w')
     ofile.write(layout_json)
+
     # Add to proton-cli
     add_layout_to_proton_cli(proton_path, layout_file_name)
+
+    # Cleanup file
+    os.remove(layout_file_name)
 
 
 def import_sequence(proton_path, seq_file, key_file, audio_file, layout_id):
     # Get sequence
     seq = VixenSequence.make_vixen_sequence(seq_file)
     seq_metadata = seq.get_metadata()
+    
     # Write sequence data as JSON to file
     seq_json = json.dumps(seq.events.tolist())
     ofile_name = seq_metadata['title'] + ".json"
     ofile = open(ofile_name, mode='w')
     ofile.write(seq_json)
+    
     # Add to proton-cli
     add_seq_to_proton_cli(proton_path, seq, ofile_name, key_file, audio_file, layout_id)
+
+    # Cleanup file
+    os.remove(ofile_name)
 
 
 def run():
