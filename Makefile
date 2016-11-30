@@ -1,0 +1,2 @@
+run:
+	@./vixenconverter/converter.py
