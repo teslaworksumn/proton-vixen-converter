@@ -37,7 +37,7 @@ class VixenProfile(VixenFile):
             'channelName': channel.text.replace('(', ' ').replace(')', ' ').replace('.', ' ').replace('\'', ' '),
             'color': format(int(channel.attrib['color']) & 0xffffff, "06X"),
             'internalChannel': output_order.index(int(channel.attrib['output'])) + 1,
-            'dmxChannel': output_order.index(int(channel.attrib['output'])) + 1,
+            'dmxChannel': 121, # Unused DMX channel in the 2016 show
             'fixtureName': 'VixFix' + self.name,
             'location': '0,0,0',
             'rotation': '0,0,0'
