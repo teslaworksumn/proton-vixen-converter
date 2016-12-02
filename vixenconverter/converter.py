@@ -53,13 +53,15 @@ def import_profile(proton_path, pro_file):
 
     # Write layout data as JSON to file
     layout = {
-        'layoutName': pro.name,
+        'layoutName': pro.name.replace('_', ''),
         'channels': channels
     }
     layout_json = json.dumps(layout)
     layout_file_name = pro.name + "_layout.json"
     ofile = open(layout_file_name, mode='w')
     ofile.write(layout_json)
+    ofile.flush()
+    ofile.close()
 
     # Add to proton-cli
     add_layout_to_proton_cli(proton_path, layout_file_name)
@@ -80,6 +82,8 @@ def import_sequence(proton_path, seq_file, key_file, audio_file, layout_id):
     ofile_name = seq_metadata['title'] + ".json"
     ofile = open(ofile_name, mode='w')
     ofile.write(seq_json)
+    ofile.flush()
+    ofile.close()
     
     # Add to proton-cli
     add_seq_to_proton_cli(proton_path, seq, ofile_name, key_file, audio_file, layout_id)
