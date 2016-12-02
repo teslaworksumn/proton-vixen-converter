@@ -66,9 +66,6 @@ def import_profile(proton_path, pro_file):
     # Add to proton-cli
     add_layout_to_proton_cli(proton_path, layout_file_name)
 
-    # Cleanup file
-    os.remove(layout_file_name)
-
 
 def import_sequence(proton_path, seq_file, key_file, audio_file, layout_id):
     """Converts a Vixen sequence (.vix) to a Proton sequence and imports it into proton_cli."""
@@ -87,9 +84,6 @@ def import_sequence(proton_path, seq_file, key_file, audio_file, layout_id):
     
     # Add to proton-cli
     add_seq_to_proton_cli(proton_path, seq, ofile_name, key_file, audio_file, layout_id)
-
-    # Cleanup file
-    os.remove(ofile_name)
 
 
 def run():
