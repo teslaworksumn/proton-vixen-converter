@@ -1,4 +1,6 @@
 # proton-vixen-converter
+[![Updates](https://pyup.io/repos/github/bookdude13/proton-vixen-converter/shield.svg)](https://pyup.io/repos/github/bookdude13/proton-vixen-converter/)
+
 Converts *.vix files to Proton's format. Uses [Semantic Versioning](http://www.semver.org) 
 
 # Setup
