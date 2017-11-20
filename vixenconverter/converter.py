@@ -9,7 +9,7 @@ help_message = """Proton - Vixen Converter
 
 Usage:
     converter.py import-sequence <admin-key> <seq-file> <audio-file> <layout-id>
-    converter.py import-layout <pro-file>
+    converter.py import-layout <pro-file> <default-dmx>
     converter.py --version
     converter.py (-h | --help)
 
@@ -48,12 +48,12 @@ def add_layout_to_proton_cli(layout_file):
     os.execlp('proton_cli', 'proton_cli', 'new-layout', layout_file)
 
 
-def import_profile(pro_file):
+def import_profile(pro_file, default_channel):
     """Converts a Vixen profile (.pro) to a Proton layout and adds it to proton_cli."""
 
     # Get profile
     pro = VixenProfile.make_vixen_profile(pro_file)
-    channels = pro.get_channels()
+    channels = pro.get_channels(default_channel)
 
     # Write layout data as JSON to file
     layout = {
@@ -105,7 +105,8 @@ def run():
         import_sequence(seq_file, key_file, audio_file, layout_id)
     else:
         pro_file = arguments['<pro-file>']
-        import_profile(pro_file)
+        default_channel = int(arguments['<default-dmx>'])
+        import_profile(pro_file, default_channel)
 
 
 # Don't run if imported
